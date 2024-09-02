@@ -1,0 +1,17 @@
+{
+    "name": "module/vue",
+    "description": "Allow add vue library",
+    "type": "magento2-module",
+    "license": "mit",
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr4": {
+            "Kinuz\\Vue\\": ""
+        }
+    },
+    "version": "1.0.0"
+}

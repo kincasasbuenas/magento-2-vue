@@ -1,0 +1,80 @@
+<!-- 
+    IMPLEMENTACIÓN Y USO EN ARCHIVO .PHTML 
+-->
+<div id="vue-test">
+    <h1>{{ message }}</h1>
+</div>
+
+<script>
+require([
+    'vue',
+    'Magento_Customer/js/customer-data'
+], 
+function(Vue, customerData) {
+    'use strict'
+
+    /*
+    //OPTIONS
+        const app = Vue.createApp({
+            data() {
+                return {
+                    subtotal: 0,
+                    message: 'Cargando...'
+                }
+            },
+            mounted() {
+                const self = this;
+                const cart = customerData.get('cart');
+
+                // Inicializar el subtotal y el mensaje
+                self.updateSubtotal(cart().subtotalAmount);
+
+                // Observar cambios en los datos del carrito
+                cart.subscribe(function(updatedCart) {
+                    self.updateSubtotal(updatedCart.subtotalAmount);
+                });
+            },
+            methods: {
+                updateSubtotal(amount) {
+                    this.subtotal = parseFloat(amount);
+                    this.message = `Bienvenido soy Vue, tienes un total de ${this.subtotal} en tu carrito.`;
+                }
+            }
+        }); 
+    */
+
+    //COMPOSITION
+    const { ref, onMounted } = Vue;
+
+    const app = Vue.createApp({
+        setup() {
+            const subtotal = ref(0);
+            const message = ref('Cargando...');
+
+            const updateSubtotal = (amount) => {
+                subtotal.value = parseFloat(amount || 0);
+                message.value = `👋 ¡Bienvenido! Soy Vue, y tienes un total de $${subtotal.value} en tu carrito.`;
+            };
+
+            onMounted(() => {
+                const cart = customerData.get('cart');
+
+                // Inicializar el subtotal y el mensaje
+                updateSubtotal(cart().subtotalAmount);
+
+                // Observar cambios en los datos del carrito
+                cart.subscribe((newCart) => {
+                    updateSubtotal(newCart.subtotalAmount);
+                });
+            });
+
+            return {
+                subtotal,
+                message
+            };
+        }
+    });
+    app.mount('#vue-test');
+});
+</script>
+
